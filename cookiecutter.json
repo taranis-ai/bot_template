@@ -13,7 +13,7 @@
         "project_name": "Project Name",
         "author_mail": "Your E-Mail",
         "description": "Description",
-        "repo_url": "Repository URL",
+        "repo_url": "Github URL",
         "init_git_repo": "Initialize git repo?"
     }
 }
