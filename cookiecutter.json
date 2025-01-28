@@ -4,6 +4,7 @@
     "__package_name": "{{cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_')}}",
     "__module_name": "{{cookiecutter.__package_name}}",
     "__class_name": "{{cookiecutter.project_name.replace(' ', '') | capitalize }}",
+    "__image_name": "taranis-{{cookiecutter.project_name.lower().replace(' ', '-')}}",
     "author_mail": "author@ait.ac.at",
     "description": "A short description of what the bot does",
     "repo_url": "''",
