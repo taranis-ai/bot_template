@@ -15,6 +15,7 @@ Create a python venv and install the necessary packages for the bot to run.
 
 ```bash
 uv venv
+source .venv/bin/activate
 uv sync --all-extras --dev
 ```
 
