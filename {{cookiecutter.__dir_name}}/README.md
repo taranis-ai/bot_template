@@ -1,0 +1,59 @@
+# Taranis AI {{cookiecutter.project_name}} Bot
+
+Add more verbose description of your Bot here
+
+
+## Pre-requisites
+
+- uv - https://docs.astral.sh/uv/getting-started/installation/
+- docker (for building container) - https://docs.docker.com/engine/
+
+
+## Development
+
+Create a python venv and install the necessary packages for the bot to run.
+
+```bash
+uv venv
+uv sync --all-extras --dev
+```
+
+## Usage
+
+You can run your bot locally with
+
+```bash
+flask run
+# or
+granian run
+```
+
+
+## Docker
+
+You can also create a Docker image out of this bot. For this, you first need to build the image with
+
+```bash
+./build_container.sh
+```
+
+then you can run it with:
+
+```bash
+docker run -p 5000:5000 ghcr.io/taranis-ai/taranis-summarize-bot:latest
+```
+
+If you encounter errors, make sure that port 5000 is not in use by another application.
+
+
+## Test the bot
+
+Once the bot is running, you can send test data to it on which it runs its inference method:
+
+```bash
+curl -X POST http://127.0.0.1:5000 -H "Content-Type: application/json" -d '{"key": "some data"}'
+```
+
+## License
+
+EUROPEAN UNION PUBLIC LICENCE v. 1.2
