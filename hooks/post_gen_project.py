@@ -1,7 +1,5 @@
-import os
-from pathlib import Path
-import shutil
 import subprocess
+
 
 def init_git_repo():
     try:
@@ -9,6 +7,7 @@ def init_git_repo():
         subprocess.run(["git", "remote", "add", "origin", "{{cookiecutter.repo_url}}"])
     except subprocess.CalledProcessError as e:
         print(f"Failed to initialize Git repository: {e}")
+
 
 if __name__ == "__main__":
     if {{cookiecutter.init_git_repo}}:
