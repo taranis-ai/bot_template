@@ -4,6 +4,5 @@ class {{cookiecutter.__class_name}}:
         pass
 
     def predict(self):
-
         # add inference code here
         raise NotImplementedError("Bot class {{cookiecutter.__class_name}} must implement 'predict' method")

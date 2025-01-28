@@ -13,7 +13,8 @@ class BotEndpoint(MethodView):
         data = request.get_json()
 
         # pre-process data here and pass it to bot.predict method
-        # bot_result = self.bot.predict(<add_bot_args>)
+        # e.g. extracted_data = data.get("key", "")
+        #      bot_result = self.bot.predict(extracted_data)
         bot_result = None
 
         # return bot_result as JSON
