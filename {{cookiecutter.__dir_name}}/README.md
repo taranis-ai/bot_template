@@ -8,9 +8,6 @@ Add more verbose description of your Bot here
 - uv - https://docs.astral.sh/uv/getting-started/installation/
 - docker (for building container) - https://docs.docker.com/engine/
 
-
-## Development
-
 Create a python venv and install the necessary packages for the bot to run.
 
 ```bash
