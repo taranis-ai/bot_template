@@ -1,0 +1,18 @@
+{
+    "project_name": null,
+    "__dir_name": "{{cookiecutter.project_name.replace(' ', '')}}",
+    "__package_name": "{{cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_')}}",
+    "__repo_name": "{{cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_')}}",
+    "__module_name": "{{cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_')}}",
+    "author_mail": "author@ait.ac.at",
+    "description": "A short description of what the bot does",
+    "repo_url": "''",
+    "init_git_repo": false,
+    "__prompts__": {
+        "project_name": "Project Name",
+        "author_mail": "Your E-Mail",
+        "description": "Description",
+        "repo_url": "Repository URL",
+        "init_git_repo": "Initialize git repo?"
+    }
+}
