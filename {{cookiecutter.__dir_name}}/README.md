@@ -38,10 +38,10 @@ You can also create a Docker image out of this bot. For this, you first need to 
 then you can run it with:
 
 ```bash
-docker run -p 5000:5000 ghcr.io/taranis-ai/taranis-summarize-bot:latest
+docker run -p 5500:8000 ghcr.io/taranis-ai/taranis-summarize-bot:latest
 ```
 
-If you encounter errors, make sure that port 5000 is not in use by another application.
+If you encounter errors, make sure that port 5500 is not in use by another application.
 
 
 ## Test the bot
@@ -49,7 +49,7 @@ If you encounter errors, make sure that port 5000 is not in use by another appli
 Once the bot is running, you can send test data to it on which it runs its inference method:
 
 ```bash
-curl -X POST http://127.0.0.1:5000 -H "Content-Type: application/json" -d '{"key": "some data"}'
+curl -X POST http://127.0.0.1:5500 -H "Content-Type: application/json" -d '{"key": "some data"}'
 ```
 
 ## License
