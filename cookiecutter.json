@@ -1,5 +1,6 @@
 {
     "project_name": null,
+    "models": "model_a, model_b",
     "__dir_name": "{{cookiecutter.project_name.replace(' ', '')}}",
     "__package_name": "{{cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_')}}",
     "__module_name": "{{cookiecutter.__package_name}}",
@@ -11,6 +12,7 @@
     "init_git_repo": false,
     "__prompts__": {
         "project_name": "Project Name",
+        "models": "Different models used in your project (comma-separated list)",
         "author_mail": "Your E-Mail",
         "description": "Description",
         "repo_url": "Github URL",
