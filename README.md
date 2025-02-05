@@ -20,36 +20,45 @@ First, create a project from the template:
 You will be prompted a few questions:
 
 ```bash
-  [1/5] Project Name: AwesomeBot
-  [2/5] Your E-Mail (author@ait.ac.at): Your Mail
-  [3/5] Description (A short description of what the bot does): Description
-  [4/5] Github URL (''): Github repo URL (if you want to publish repo)
-  [5/5] Initialize git repo? [y/n] (n):
+  [1/6] Project Name: Awesome New Bot
+  [2/6] Different models used in your project (comma-separated list) (model_a): bert, roberta
+  [3/6] Your E-Mail (author@ait.ac.at): Your Mail
+  [4/6] Description (A short description of what the bot does): Description
+  [5/6] Github URL (''): Github repo URL (if you want to publish repo)
+  [6/6] Initialize git repo? [y/n] (n): 
+
 ```
 Cookiecutter will create a project directory with the correct structure and pre-defined configs for you.
 
 ```bash
-AwesomeBot/
+AwesomeNewBot/
 ├── app.py
-├── awesomebot
-│   ├── awesomebot.py
+├── awesome_new_bot
+│   ├── bert.py
 │   ├── config.py
+│   ├── decorators.py
 │   ├── __init__.py
 │   ├── log.py
 │   ├── __main__.py
-│   └── router.py
+│   ├── predictor_factory.py
+│   ├── predictor.py
+│   ├── roberta.py
+│   ├── router.py
+│   └── tests
 ├── build_container.sh
 ├── Containerfile
 ├── LICENSE.md
 ├── pyproject.toml
-└── README.md
+├── README.md
+└── tox.ini
 ```
 
-You can go right ahead and implement your bot logic.
-There are only two files that need to be changed:
+Since we gave two possible models (bert & roberta), cookiecutter created a bert.py and a roberta.py file.
+You can import the respective models and implement the bot logic there.
 
-- awesomebot.py - The actual inference code goes here
-- router.py - Need to implement data pre-processing and calling the bot in post method
+The only other file that needs to be changed is router.py
+
+Here, you need to implement the post method, that receives data from a POST request and calls the predict method of the appropriate models.
 
 
 ## Build and run
