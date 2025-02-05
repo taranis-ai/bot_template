@@ -1,6 +1,7 @@
 from pydantic import field_validator, ValidationInfo
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from datetime import datetime
+from typing import Literal
 
 
 class Settings(BaseSettings):
