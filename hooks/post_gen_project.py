@@ -10,7 +10,10 @@ model_file_str = """from {{cookiecutter.__module_name}}.config import Config
 from {{cookiecutter.__module_name}}.predictor import Predictor
 
 class <model_class>:
-    model_name = "<model>"
+
+    # add huggingface model name (e.g. facebook/bart-large-cnn)
+    # needed for using the modelinfo endpoint
+    model_name = None
 
     def __init__(self):
         # instantiate model here
@@ -20,6 +23,8 @@ class <model_class>:
         # add inference code here
         raise NotImplementedError("The class <model_class> must implement the 'predict' method"))
 """
+
+model_config_str = "MODEL: Literal<model_list> = <default_model>"
     
 
 
@@ -60,6 +65,15 @@ def add_model_variants():
             print(line, end="")
             if line.startswith("    def __new__"):
                 print(f"        {model_import_str}")
+
+    
+    # add MODEL config to Settings
+    with fileinput.input("./{{cookiecutter.__package_name}}/config.py", inplace=True) as file:
+        for line in file:
+            if line.startswith("MODEL"):
+                print(model_config_str.replace("<model_list>", models).replace("<default_model>", f"{models[0]}"))
+            else:
+                print(line, end="")
 
 
 if __name__ == "__main__":
