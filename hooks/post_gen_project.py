@@ -1,6 +1,7 @@
 import fileinput
 import subprocess
 from pathlib import Path
+import re
 
 model_import_str_template = """Config.MODEL == <model>:
             from {{cookiecutter.__module_name}}.<model> import <model_class>
@@ -9,7 +10,7 @@ model_import_str_template = """Config.MODEL == <model>:
 model_file_str = """from {{cookiecutter.__module_name}}.config import Config
 from {{cookiecutter.__module_name}}.predictor import Predictor
 
-class <model_class>:
+class <model_class>(Predictor):
 
     # add huggingface model name (e.g. facebook/bart-large-cnn)
     # needed for using the modelinfo endpoint
@@ -24,9 +25,9 @@ class <model_class>:
         raise NotImplementedError("The class <model_class> must implement the 'predict' method"))
 """
 
-model_config_str = "MODEL: Literal<model_list> = <default_model>"
+model_config_str = """    MODEL: Literal<model_list> = <default_model>"""
     
-
+model_build_arg_str = '''INCLUDED_MODEL=${INCLUDED_MODEL:-<default_model>}'''
 
 def init_git_repo():
     try:
@@ -70,11 +71,18 @@ def add_model_variants():
     # add MODEL config to Settings
     with fileinput.input("./{{cookiecutter.__package_name}}/config.py", inplace=True) as file:
         for line in file:
-            if line.startswith("MODEL"):
-                print(model_config_str.replace("<model_list>", models).replace("<default_model>", f"{models[0]}"))
+            if line.startswith("    MODEL"):
+                print(model_config_str.replace("<model_list>", str(models)).replace("<default_model>", f'"{models[0]}"'))
             else:
                 print(line, end="")
 
+    # add default MODEL to build_container.sh
+    with fileinput.input("./build_container.sh", inplace=True) as file:
+        for line in file:
+            if line.startswith("INCLUDED_MODEL"):
+                print(model_build_arg_str.replace("<default_model>", f'"{models[0]}"'))
+            else:
+                print(line, end="")
 
 if __name__ == "__main__":
     if {{cookiecutter.init_git_repo}}:

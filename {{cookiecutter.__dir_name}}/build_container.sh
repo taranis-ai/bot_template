@@ -2,7 +2,7 @@
 
 if [ ! -e "uv.lock" ]
 then
-    echo "uv.lock does not exist. Please run uv sync to create it"
+    echo "uv.lock does not exist. Please run 'uv sync' or 'uv lock' to create it"
     echo "Error: Cannot build container without uv.lock -> Abort"
     exit
 fi
@@ -13,6 +13,7 @@ cd $(git rev-parse --show-toplevel)
 
 GITHUB_REPOSITORY_OWNER=${GITHUB_REPOSITORY_OWNER:-"ghcr.io/taranis-ai"}
 buildx_tags="--tag ${GITHUB_REPOSITORY_OWNER}/taranis-awesomebot:latest "
+INCLUDED_MODEL=${INCLUDED_MODEL:-}
 
 if git rev-parse --quiet --verify HEAD >/dev/null; then
     CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD | sed 's/[^a-zA-Z0-9_.-]/_/g')
@@ -25,5 +26,6 @@ fi
 
 docker buildx build --file Containerfile \
   --build-arg GITHUB_REPOSITORY_OWNER="${GITHUB_REPOSITORY_OWNER}" \
+  --build-arg MODEL="${INCLUDED_MODEL}" \
   $buildx_tags \
   --load .
