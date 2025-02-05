@@ -37,7 +37,7 @@ ENV GRANIAN_INTERFACE=wsgi
 ENV GRANIAN_HOST=0.0.0.0
 
 # bake models in to the image
-RUN python -c 'from {{cookiecutter.__package_name}}.{{cookiecutter.__module_name}} import {{cookiecutter.__class_name}}; {{cookiecutter.__class_name}}()'
+RUN python -c 'from {{cookiecutter.__package_name}}.predictor_factory import PredictorFactory; PredictorFactory()'
 
 EXPOSE 8000
 
