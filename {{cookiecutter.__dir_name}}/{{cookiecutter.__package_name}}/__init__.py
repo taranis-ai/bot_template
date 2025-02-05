@@ -1,6 +1,5 @@
 from flask import Flask
 from {{cookiecutter.__package_name}} import router
-from {{cookiecutter.__package_name}}.{{cookiecutter.__module_name}} import {{cookiecutter.__class_name}}
 
 
 def create_app():
@@ -14,8 +13,7 @@ def create_app():
 
 
 def init(app: Flask):
-    bot = {{cookiecutter.__class_name}}()
-    router.init(app, bot)
+    router.init(app)
 
 
 if __name__ == "__main__":

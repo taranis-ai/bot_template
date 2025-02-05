@@ -6,20 +6,20 @@ from {{cookiecutter.__package_name}}.predictor_factory import PredictorFactory
 
 
 class BotEndpoint(MethodView):
-    def __init__(self, processor: Predictor) -> None:
+    def __init__(self, bot: Predictor) -> None:
         super().__init__()
-        self.processor = processor
+        self.bot = bot
 
     def post(self):
         data = request.get_json()
 
-        # pre-process data here and pass it to self.processor.predict method
+        # pre-process data here and pass it to self.bot.predict method
         # e.g. extracted_data = data.get("key", "")
-        #      processor_result = self.processor.predict(extracted_data)
-        processor_result = None
+        #      bot_result = self.bot.predict(extracted_data)
+        bot_result = None
 
-        # return processor_result as JSON
-        return jsonify({"<result_name>": processor_result})
+        # return bot_result as JSON
+        return jsonify({"<result_name>": bot_result})
 
 
 class HealthCheck(MethodView):
@@ -27,18 +27,19 @@ class HealthCheck(MethodView):
         return jsonify({"status": "ok"})
 
 class ModelInfo(MethodView):
-    def __init__(self, processor: Predictor):
+    def __init__(self, bot: Predictor):
         super().__init__()
-        self.processor = processor
+        self.bot = bot
 
     def get(self):
-        return jsonify(self.processor.modelinfo)
+        return jsonify(self.bot.modelinfo)
 
 
 def init(app: Flask):
-    processor = PredictorFactory()
+    bot = PredictorFactory()
     app.url_map.strict_slashes = False
     bot_bp = Blueprint("bot", __name__)
-    bot_bp.add_url_rule("/", view_func=BotEndpoint.as_view("predict", processor=processor))
+    bot_bp.add_url_rule("/", view_func=BotEndpoint.as_view("predict", bot=bot))
     bot_bp.add_url_rule("/health", view_func=HealthCheck.as_view("health"))
+    bot_bp.add_url_rule("/modelinfo", view_func=ModelInfo.as_view("modelinfo", bot=bot))
     app.register_blueprint(bot_bp)

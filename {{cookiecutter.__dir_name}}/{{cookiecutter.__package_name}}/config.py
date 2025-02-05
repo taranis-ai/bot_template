@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     GIT_INFO: dict[str, str] | None = None
     CACHE_TYPE: str = "SimpleCache"
     CACHE_DEFAULT_TIMEOUT: int = 300
+    MODEL: 
 
     @field_validator("API_KEY", mode="before")
     def check_non_empty_string(cls, v: str, info: ValidationInfo) -> str:
