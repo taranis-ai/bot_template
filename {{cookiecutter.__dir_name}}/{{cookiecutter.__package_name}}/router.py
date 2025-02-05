@@ -3,6 +3,7 @@ from flask.views import MethodView
 
 from {{cookiecutter.__package_name}}.predictor import Predictor
 from {{cookiecutter.__package_name}}.predictor_factory import PredictorFactory
+from {{cookiecutter.__package_name}}.decorators import api_key_required
 
 
 class BotEndpoint(MethodView):
@@ -10,6 +11,7 @@ class BotEndpoint(MethodView):
         super().__init__()
         self.bot = bot
 
+    @api_key_required
     def post(self):
         data = request.get_json()
 
