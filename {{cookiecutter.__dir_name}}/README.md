@@ -38,7 +38,7 @@ You can also create a Docker image out of this bot. For this, you first need to 
 then you can run it with:
 
 ```bash
-docker run -p 5500:8000 ghcr.io/taranis-ai/taranis-summarize-bot:latest
+docker run -p 5500:8000 <image-name>:<tag>
 ```
 
 If you encounter errors, make sure that port 5500 is not in use by another application.
