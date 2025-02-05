@@ -21,7 +21,7 @@ class BotEndpoint(MethodView):
         bot_result = None
 
         # return bot_result as JSON
-        return jsonify({"<result_name>": bot_result})
+        return jsonify({"result": bot_result})
 
 
 class HealthCheck(MethodView):
