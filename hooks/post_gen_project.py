@@ -1,14 +1,14 @@
 import fileinput
 import subprocess
 from pathlib import Path
-import re
 
-model_import_str_template = """Config.MODEL == <model>:
+model_import_str_template = """Config.MODEL == '<model>':
             from {{cookiecutter.__module_name}}.<model> import <model_class>
             return <model_class>(*args, **kwargs)"""
 
 model_file_str = """from {{cookiecutter.__module_name}}.config import Config
 from {{cookiecutter.__module_name}}.predictor import Predictor
+# import model libraries
 
 class <model_class>(Predictor):
 
@@ -22,7 +22,7 @@ class <model_class>(Predictor):
     
     def predict(self):
         # add inference code here
-        raise NotImplementedError("The class <model_class> must implement the 'predict' method"))
+        raise NotImplementedError("The class <model_class> must implement the 'predict' method")
 """
 
 model_config_str = """    MODEL: Literal<model_list> = <default_model>"""
