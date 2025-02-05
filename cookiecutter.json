@@ -1,6 +1,6 @@
 {
     "project_name": null,
-    "models": "model_a, model_b",
+    "models": "model_a",
     "__dir_name": "{{cookiecutter.project_name.replace(' ', '')}}",
     "__package_name": "{{cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_')}}",
     "__module_name": "{{cookiecutter.__package_name}}",
