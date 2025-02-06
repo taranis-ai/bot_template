@@ -1,5 +1,4 @@
 import sys
-import json
 
 models = "{{ cookiecutter.models }}"
 try:

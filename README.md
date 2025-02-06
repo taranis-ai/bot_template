@@ -25,7 +25,7 @@ You will be prompted a few questions:
   [3/6] Your E-Mail (author@ait.ac.at): Your Mail
   [4/6] Description (A short description of what the bot does): Description
   [5/6] Github URL (''): Github repo URL (if you want to publish repo)
-  [6/6] Initialize git repo? [y/n] (n): 
+  [6/6] Initialize git repo? [y/n] (n):
 
 ```
 Cookiecutter will create a project directory with the correct structure and pre-defined configs for you.
