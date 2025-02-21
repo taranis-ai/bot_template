@@ -111,6 +111,16 @@ def add_model_variants():
             else:
                 print(line, end="")
 
+    # add models to github build workflow
+    with fileinput.input(".github/workflows/build.yml", inplace=True) as file:
+        for line in file:
+            if "<models>" in line:
+                print(line.replace("<models>", "[" + ", ".join(models) + "]"))
+            elif "<first_model>" in line:
+                print(line.replace("<first_model>", models[0]))
+            else:
+                print(line, end="")
+
 
 if __name__ == "__main__":
     if {{cookiecutter.init_git_repo}}:
