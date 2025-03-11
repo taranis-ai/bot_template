@@ -32,14 +32,14 @@ model_build_arg_str = """INCLUDED_MODEL=${INCLUDED_MODEL:-<default_model>}"""
 
 def init_git_repo():
     try:
-        subprocess.run(["git", "init"], check=True)
+        subprocess.run(["git", "init", "-b", "main"], check=True)
         subprocess.run(
             [
                 "git",
                 "remote",
                 "add",
                 "origin",
-                "{{cookiecutter.repo_url.replace('http://', 'git@').replace('https://', 'git@').replace('github.com/', 'github.com:')}}",
+                "{{cookiecutter.repo_url.replace('http://', 'git@').replace('https://', 'git@').replace('github.com/', 'github.com:')}}.git",
             ]
         )
         print(
