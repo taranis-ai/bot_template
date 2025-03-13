@@ -44,4 +44,4 @@ jobs:
     with:
       ghcr_image: ghcr.io/taranis-ai/{{ cookiecutter.__image_name }}
       model: {% raw %}${{ matrix.model }}{% endraw %}
-      latest: {% raw %}${{ matrix.model == '<first_model>' }}{% endraw %}
+      latest: {% raw %}${{ matrix.model == '<default_model>' }}{% endraw %}

@@ -111,13 +111,21 @@ def add_model_variants():
             else:
                 print(line, end="")
 
+    # add default MODEL to Containerfile
+    with fileinput.input("./Containerfile", inplace=True) as file:
+        for line in file:
+            if line.startswith("ARG MODEL"):
+                print(line.replace("<default_model>", f"{models[0]}"))
+            else:
+                print(line, end="")
+
     # add models to github build workflow
     with fileinput.input(".github/workflows/build.yml", inplace=True) as file:
         for line in file:
             if "<models>" in line:
                 print(line.replace("<models>", "[" + ", ".join(models) + "]"))
-            elif "<first_model>" in line:
-                print(line.replace("<first_model>", models[0]))
+            elif "<default_model>" in line:
+                print(line.replace("<default_model>", models[0]))
             else:
                 print(line, end="")
 
