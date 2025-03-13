@@ -36,3 +36,6 @@ src/.env
 *.njsproj
 *.sln
 *.sw?
+
+# ruff cache
+.ruff_cache/*
