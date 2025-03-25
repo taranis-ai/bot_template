@@ -27,7 +27,7 @@ class <model_class>(Predictor):
 
 model_config_str = """    MODEL: Literal<model_list> = <default_model>"""
 
-model_build_arg_str = """INCLUDED_MODEL=${INCLUDED_MODEL:-<default_model>}"""
+model_build_arg_str = """MODEL=${MODEL:-<default_model>}"""
 
 
 def init_git_repo():
@@ -106,7 +106,7 @@ def add_model_variants():
     # add default MODEL to build_container.sh
     with fileinput.input("./build_container.sh", inplace=True) as file:
         for line in file:
-            if line.startswith("INCLUDED_MODEL"):
+            if line.startswith("MODEL"):
                 print(model_build_arg_str.replace("<default_model>", f'"{models[0]}"'))
             else:
                 print(line, end="")
