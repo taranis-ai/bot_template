@@ -1,4 +1,4 @@
-name: Test and Build Containers
+name: Build and merge containers
 
 on:
   push:
