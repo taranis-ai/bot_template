@@ -1,28 +1,11 @@
-from pydantic import field_validator, ValidationInfo
-from pydantic_settings import BaseSettings, SettingsConfigDict
-from datetime import datetime
 from typing import Literal
+from taranis_base_bot.config import CommonSettings
 
-
-class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
-
-    MODULE_ID: str = "{{cookiecutter.project_name.replace(' ', '')}}"
-    DEBUG: bool = False
-    API_KEY: str = ""
-
-    COLORED_LOGS: bool = True
-    BUILD_DATE: datetime = datetime.now()
-    GIT_INFO: dict[str, str] | None = None
-    CACHE_TYPE: str = "SimpleCache"
-    CACHE_DEFAULT_TIMEOUT: int = 300
+class Settings(CommonSettings):
     MODEL: Literal[""]
-
-    @field_validator("API_KEY", mode="before")
-    def check_non_empty_string(cls, v: str, info: ValidationInfo) -> str:
-        if not isinstance(v, str) or not v.strip():
-            print("API_KEY is not set or empty, disabling API key requirement")
-        return v
+    PACKAGE_NAME: str = "{{cookiecutter.__package_name}}"
+    HF_MODEL_INFO: bool = True
+    PAYLOAD_KEY: str = "text"
 
 
 Config = Settings()
