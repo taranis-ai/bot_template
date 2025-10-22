@@ -2,19 +2,16 @@ import fileinput
 import subprocess
 from pathlib import Path
 
-model_import_str_template = """Config.MODEL == '<model>':
-            from {{cookiecutter.__module_name}}.<model> import <model_class>
-            return <model_class>(*args, **kwargs)"""
 
 model_file_str = """from {{cookiecutter.__module_name}}.config import Config
-from {{cookiecutter.__module_name}}.predictor import Predictor
 # import model libraries
 
-class <model_class>(Predictor):
+class <model_class>:
 
-    # add huggingface model name (e.g. facebook/bart-large-cnn)
-    # needed for using the modelinfo endpoint
-    model_name = None
+    # model_name
+    # if using HF_MODEL_INFO=true, make sure that the model_name is equal to
+    # the models base name on Huggingface
+    model_name = ""
 
     def __init__(self):
         # instantiate model here
@@ -25,8 +22,10 @@ class <model_class>(Predictor):
         raise NotImplementedError("The class <model_class> must implement the 'predict' method")
 """
 
-model_config_str = """    MODEL: Literal<model_list> = <default_model>"""
+functional_test_str = """
+"""
 
+model_config_str = """    MODEL: Literal<model_list> = <default_model>"""
 model_build_arg_str = """MODEL=${MODEL:-<default_model>}"""
 
 
@@ -50,21 +49,11 @@ def init_git_repo():
 
 
 def add_model_variants():
-    model_import_str = ""
-
     models = "{{ cookiecutter.models }}".split(",")
     models = [model.strip().lower() for model in models]
 
-    for i, model in enumerate(models):
+    for model in models:
         model_class = "".join(word.capitalize() for word in model.split("_"))
-        if i == 0:
-            model_import_str += "if " + model_import_str_template.replace(
-                "<model>", model
-            ).replace("<model_class>", model_class)
-        else:
-            model_import_str += "\n\n        elif " + model_import_str_template.replace(
-                "<model>", model
-            ).replace("<model_class>", model_class)
 
         # create a specific .py file for each model variant
         model_file_path = Path("{{cookiecutter.__package_name}}") / f"{model}.py"
@@ -76,20 +65,44 @@ def add_model_variants():
                 )
             )
 
-    model_import_str += (
-        '\n\n        raise ValueError(f"Unsupported model: {Config.MODEL}")'
-    )
+        # add a functional test for each model to tests/test_function.py
+        tests_dir = Path("{{cookiecutter.__dir_name}}") / "tests"
+        conftest_path = tests_dir / "conftest.py"
+        test_file_path = tests_dir / "test_function.py"
 
-    # add conditional model imports to predictor_factory
-    with fileinput.input(
-        "./{{cookiecutter.__package_name}}/predictor_factory.py", inplace=True
-    ) as file:
-        for line in file:
-            print(line, end="")
-            if line.startswith("    def __new__"):
-                print(f"        {model_import_str}")
+        with open(conftest_path, "a") as cf, open(test_file_path, "a") as tf:
+            cf.write("import pytest\n")
+            tf.write("\n")
 
-    # add MODEL config to Settings
+            for model in models:
+                model_class = "".join(word.capitalize() for word in model.split("_"))
+
+                # imports
+                import_line = f"from {{cookiecutter.__package_name}}.{model} import {model_class}\n"
+                cf.write(import_line)
+                tf.write(import_line)
+
+            cf.write("\n")
+            tf.write("\n")
+
+            for model in models:
+                model_class = "".join(word.capitalize() for word in model.split("_"))
+                fixture_name = model
+
+                # fixture in conftest.py
+                cf.write(
+                    f'@pytest.fixture(scope="session")\n'
+                    f"def {fixture_name}():\n"
+                    f"    yield {model_class}()\n\n"
+                )
+
+                # test in test_function.py
+                tf.write(
+                    f"def test_cybersec_classification_{model}({fixture_name}: {model_class}):\n"
+                    f"    assert False, 'Add a functional test for your {model_class} model'\n"
+                )
+
+    # add MODEL config to config.py
     with fileinput.input(
         "./{{cookiecutter.__package_name}}/config.py", inplace=True
     ) as file:
