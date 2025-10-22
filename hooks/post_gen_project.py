@@ -3,7 +3,7 @@ import subprocess
 from pathlib import Path
 
 
-model_file_str = """from {{cookiecutter.__module_name}}.config import Config
+model_file_str = """from {{cookiecutter.__package_name}}.config import Config
 # import model libraries
 
 class <model_class>:
@@ -70,7 +70,6 @@ def add_model_variants():
     tests_dir = Path("tests")
     conftest_path = tests_dir / "conftest.py"
     test_file_path = tests_dir / "test_function.py"
-
     with open(conftest_path, "a") as cf, open(test_file_path, "a") as tf:
         cf.write("import pytest\n")
         tf.write("\n")
