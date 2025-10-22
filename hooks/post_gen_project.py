@@ -51,6 +51,7 @@ def init_git_repo():
 def add_model_variants():
     models = "{{ cookiecutter.models }}".split(",")
     models = [model.strip().lower() for model in models]
+    models_str = "[" + ", ".join(f'"{m}"' for m in models) + "]"
 
     for model in models:
         model_class = "".join(word.capitalize() for word in model.split("_"))
@@ -65,42 +66,42 @@ def add_model_variants():
                 )
             )
 
-        # add a functional test for each model to tests/test_function.py
-        tests_dir = Path("{{cookiecutter.__dir_name}}") / "tests"
-        conftest_path = tests_dir / "conftest.py"
-        test_file_path = tests_dir / "test_function.py"
+    # add a functional test for each model to tests/test_function.py
+    tests_dir = Path("tests")
+    conftest_path = tests_dir / "conftest.py"
+    test_file_path = tests_dir / "test_function.py"
 
-        with open(conftest_path, "a") as cf, open(test_file_path, "a") as tf:
-            cf.write("import pytest\n")
-            tf.write("\n")
+    with open(conftest_path, "a") as cf, open(test_file_path, "a") as tf:
+        cf.write("import pytest\n")
+        tf.write("\n")
 
-            for model in models:
-                model_class = "".join(word.capitalize() for word in model.split("_"))
+        for model in models:
+            model_class = "".join(word.capitalize() for word in model.split("_"))
 
-                # imports
-                import_line = f"from {{cookiecutter.__package_name}}.{model} import {model_class}\n"
-                cf.write(import_line)
-                tf.write(import_line)
+            # imports
+            import_line = f"from {{cookiecutter.__package_name}}.{model} import {model_class}\n"
+            cf.write(import_line)
+            tf.write(import_line)
 
-            cf.write("\n")
-            tf.write("\n")
+        cf.write("\n")
+        tf.write("\n")
 
-            for model in models:
-                model_class = "".join(word.capitalize() for word in model.split("_"))
-                fixture_name = model
+        for model in models:
+            model_class = "".join(word.capitalize() for word in model.split("_"))
+            fixture_name = model
 
-                # fixture in conftest.py
-                cf.write(
-                    f'@pytest.fixture(scope="session")\n'
-                    f"def {fixture_name}():\n"
-                    f"    yield {model_class}()\n\n"
-                )
+            # fixture in conftest.py
+            cf.write(
+                f'@pytest.fixture(scope="session")\n'
+                f"def {fixture_name}():\n"
+                f"    yield {model_class}()\n\n"
+            )
 
-                # test in test_function.py
-                tf.write(
-                    f"def test_cybersec_classification_{model}({fixture_name}: {model_class}):\n"
-                    f"    assert False, 'Add a functional test for your {model_class} model'\n"
-                )
+            # test in test_function.py
+            tf.write(
+                f"def test_cybersec_classification_{model}({fixture_name}: {model_class}):\n"
+                f'    assert False, "Add a functional test for your {model_class} model"\n'
+            )
 
     # add MODEL config to config.py
     with fileinput.input(
@@ -109,7 +110,7 @@ def add_model_variants():
         for line in file:
             if line.startswith("    MODEL"):
                 print(
-                    model_config_str.replace("<model_list>", str(models)).replace(
+                    model_config_str.replace("<model_list>", models_str).replace(
                         "<default_model>", f'"{models[0]}"'
                     )
                 )
@@ -133,7 +134,7 @@ def add_model_variants():
                 print(line, end="")
 
     # add models to github build workflow
-    with fileinput.input(".github/workflows/build.yml", inplace=True) as file:
+    with fileinput.input(".github/workflows/build_and_merge.yml", inplace=True) as file:
         for line in file:
             if "<models>" in line:
                 print(line.replace("<models>", "[" + ", ".join(models) + "]"))
