@@ -21,9 +21,9 @@ uv sync --all-extras --dev
 You can run your bot locally with
 
 ```bash
-flask run
+flask run --port 5500
 # or
-granian app
+granian app --port 5500
 ```
 
 
@@ -53,6 +53,14 @@ Once the bot is running, you can send test data to it on which it runs its infer
 ```bash
 curl -X POST http://127.0.0.1:5500 -H "Content-Type: application/json" -d '{"key": "some data"}'
 ```
+
+## Development
+
+If you want to contribute to the development of this bot, make sure you set up your pre-commit hooks correctly:
+
+- Install pre-commit (https://pre-commit.com/)
+- Setup hooks: `> pre-commit install`
+
 
 ## License
 
