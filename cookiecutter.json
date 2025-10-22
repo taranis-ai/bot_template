@@ -3,7 +3,6 @@
     "models": "model_a",
     "__dir_name": "{{cookiecutter.project_name.replace(' ', '')}}",
     "__package_name": "{{cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_')}}",
-    "__module_name": "{{cookiecutter.__package_name}}",
     "__image_name": "taranis-{{cookiecutter.project_name.lower().replace(' ', '-').replace('_', '-')}}",
     "author_mail": "author@ait.ac.at",
     "description": "A short description of what the bot does",
