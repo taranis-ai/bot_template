@@ -34,7 +34,7 @@ You can also create a Docker image out of this bot. For this, you first need to 
 You can specify which model the image should be built with the MODEL environment variable. If you omit it, the image will be built with the default model.
 
 ```bash
-MODEL=model_name ./build_container.sh
+MODEL=<model_name> ./build_container.sh
 ```
 
 then you can run it with:
