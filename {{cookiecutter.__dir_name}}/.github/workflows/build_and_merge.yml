@@ -1,13 +1,9 @@
-name: Test and Build Containers
+name: Build and merge containers
 
 on:
-  push:
-    branches:
-      - master
-    tags:
-      - "**"
   workflow_dispatch:
-  pull_request:
+  pull_request_review:
+    types: [submitted]
 
 permissions:
   packages: write
@@ -16,17 +12,13 @@ permissions:
   attestations: write
 
 jobs:
-  test:
-    name: Run Python Tests
-    uses: taranis-ai/github-actions/.github/workflows/python-uv.yml@master
-
   build_container:
     name: Build and Push Containers
     strategy:
       fail-fast: false
       matrix:
         model: <models>
-        os: [ubuntu-latest, ubuntu-24.04-arm]
+        os: [blacksmith-2vcpu-ubuntu-2404, blacksmith-2vcpu-ubuntu-2404-arm]
     uses: taranis-ai/github-actions/.github/workflows/build-multiarch-bot-container.yml@master
     with:
       ghcr_image: ghcr.io/taranis-ai/{{ cookiecutter.__image_name }}
