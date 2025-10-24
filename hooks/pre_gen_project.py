@@ -1,6 +1,6 @@
 import sys
 
-models = "{{ cookiecutter.models }}"
+models = "{{ models }}"
 try:
     models.split(",")
 except AttributeError:
