@@ -1,9 +1,9 @@
 [project]
-name = "{{cookiecutter.project_name.replace(' ', '')}}"
-description = "{{cookiecutter.description}}"
+name = "{{ project_name|lower|replace(' ', '_') }}"
+description = "{{description}}"
 readme = "README.md"
 license = {file = "LICENSE.md"}
-maintainers = [{ name = "AIT", email = "{{cookiecutter.author_mail}}" }]
+maintainers = [{ name = "AIT", email = "{{author_mail}}" }]
 classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
@@ -22,7 +22,7 @@ dynamic = ["version"]
 dev = ["pytest", "ruff"]
 
 [project.urls]
-"Source Code" = "{{cookiecutter.repo_url}}"
+"Source Code" = "{{repo_url}}"
 
 [build-system]
 requires = [
@@ -37,7 +37,7 @@ fallback_version = "0.0.0"
 tag_regex = "^refs/pull/(\\d+)/merge$"
 
 [tool.setuptools]
-packages = ["{{cookiecutter.__package_name}}"]
+packages = ["{{package_name}}"]
 
 [tool.ruff]
 line-length = 142

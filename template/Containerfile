@@ -25,7 +25,7 @@ WORKDIR /app/
 RUN groupadd user && useradd --home-dir /app -g user user && chown -R user:user /app
 
 COPY --from=builder --chown=user:user /app/.venv /app/.venv
-COPY --chown=user:user {{cookiecutter.__package_name}} /app/{{cookiecutter.__package_name}}
+COPY --chown=user:user {{package_name}} /app/{{package_name}}
 COPY --chown=user:user README.md app.py LICENSE.md /app/
 
 USER user
@@ -41,7 +41,7 @@ ENV GRANIAN_LOG_ACCESS_ENABLED=1
 ENV MODEL=${MODEL}
 
 # bake models in to the image
-RUN python -c 'from {{cookiecutter.__package_name}}.config import Config; from taranis_base_bot.misc import get_model; get_model(Config)'
+RUN python -c 'from {{package_name}}.config import Config; from taranis_base_bot.misc import get_model; get_model(Config)'
 
 EXPOSE 8000
 

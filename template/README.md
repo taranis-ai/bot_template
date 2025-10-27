@@ -1,4 +1,4 @@
-# Taranis AI {{cookiecutter.project_name}} Bot
+# Taranis AI {{project_name}} Bot
 
 Add more verbose description of your Bot here
 

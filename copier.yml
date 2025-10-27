@@ -1,0 +1,59 @@
+_min_copier_version: "9.0"
+# instructs copier to copy and render every file type
+_templates_suffix: ""
+
+project_name:
+  type: str
+  help: Project Name
+
+package_name:
+  default: "{{ project_name.lower().replace(' ', '_').replace('-', '_') | lower }}"
+  when: false
+  type: str
+
+image_name:
+  default: "taranis-{{ project_name.lower().replace(' ', '-').replace('_', '-') }}"
+  when: false
+  type: str
+
+models:
+  type: str
+  help: Different models used in your project (comma-separated list, e.g. model_a, model_b)
+
+author_mail:
+  type: str
+  help: Your E-Mail
+
+description:
+  type: str
+  help: A short description of what the bot does
+
+repo_url:
+  type: str
+  default: ""
+  help: Github URL
+
+init_git_repo:
+  type: bool
+  default: false
+  help: Initialize git repo?
+
+_subdirectory: template
+
+_tasks:
+  - command: >
+      git init -b main
+    when: "{{ init_git_repo }}"
+  - command: >
+      git remote add origin
+      "{{ repo_url | replace('http://','git@')
+                   | replace('https://','git@')
+                   | replace('github.com/','github.com:') }}.git"
+    when: "{{ init_git_repo }}"
+  - command:
+      - "{{ _copier_python }}"
+      - "{{ pathjoin(_copier_conf.src_path, 'hooks', 'post_create_hook.py', mode='native') }}"
+      - "{{ package_name }}"
+      - "{{ models }}"
+      - "{{ repo_url }}"
+    when: "{{ _copier_operation == 'copy' }}"
