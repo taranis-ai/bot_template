@@ -1,64 +1,66 @@
 # bot_template
 
-A cookiecutter template for bots compatible with taranis-ai
+A copier template for bots compatible with taranis-ai
 
 ## Pre-requisites
 
-cookiecutter - https://cookiecutter.readthedocs.io
-
-    pip install cookiecutter
+copier - https://copier.readthedocs.io/en/stable/#installation
 
 
 ## Example: Create Bot project from template
 
-This is a quick example of how to create your own bot from this template. Let's say, you want to create the new awesome bot AwesomeBot:
+This is a quick example of how to create your own bot from this template. Let's say, you want to create the new awesome bot, the **AwesomeBot**:
 
 First, create a project from the template:
 
-    cookiecutter https://github.com/taranis-ai/bot_template.git
+    copier copy --trust https://github.com/taranis-ai/bot_template AwesomeBot
 
 You will be prompted a few questions:
 
 ```bash
-  [1/6] Project Name: Awesome New Bot
-  [2/6] Different models used in your project (comma-separated list) (model_a): bert, roberta
-  [3/6] Your E-Mail (author@ait.ac.at): Your Mail
-  [4/6] Description (A short description of what the bot does): Description
-  [5/6] Github URL (''): Github repo URL (if you want to publish repo)
-  [6/6] Initialize git repo? [y/n] (n):
+🎤 Project Name
+   Awesome New Bot
+🎤 Different models used in your project (comma-separated list, e.g. model_a, model_b)
+   bert, roberta
+🎤 Your E-Mail
+   employee@ait.ac.at
+🎤 A short description of what the bot does
+   Cool things
+🎤 Github URL
+   https://github.com/taranis-ai/awesome_bot
+🎤 Initialize git repo?
+   Yes
 
 ```
-Cookiecutter will create a project directory with the correct structure and pre-defined configs for you.
+copier will create a directory `AwesomeBot` and copy the files from the template with the correct structure and pre-defined configs for you.
 
 ```bash
-AwesomeNewBot/
+AweseomeBot/
 ├── app.py
 ├── awesome_new_bot
 │   ├── bert.py
 │   ├── config.py
-│   ├── decorators.py
 │   ├── __init__.py
-│   ├── log.py
-│   ├── __main__.py
-│   ├── predictor_factory.py
-│   ├── predictor.py
-│   ├── roberta.py
-│   ├── router.py
-│   └── tests
+│   └── roberta.py
 ├── build_container.sh
 ├── Containerfile
+├── docker
+│   └── compose.e2e.yml
 ├── LICENSE.md
 ├── pyproject.toml
 ├── README.md
-└── tox.ini
+└── tests
+    ├── conftest.py
+    ├── __init__.py
+    └── test_function.py
 ```
 
-Since we gave two possible models (bert & roberta), cookiecutter created a bert.py and a roberta.py file.
+Since we gave two possible models (bert & roberta), copier created a bert.py and a roberta.py file.
 You can import the respective models and implement the bot logic there.
 
-The only other file that needs to be changed is router.py
+The only other file that needs to be changed is `config.py`
 
-Here, you need to implement the post method, that receives data from a POST request and calls the predict method of the appropriate models.
+Here, you need to set the `PAYLOAD_KEY` config to what you want your JSON data to have as a key, e.g. "text".
 
 
 ## Build and run
