@@ -27,13 +27,11 @@ models:
 
 author_mail:
   type: str
-  default: "(author@ait.ac.at) "
   help: Your E-Mail
 
 description:
   type: str
-  default: "(A short description of what the bot does) "
-  help: Description
+  help: A short description of what the bot does
 
 repo_url:
   type: str
@@ -45,13 +43,7 @@ init_git_repo:
   default: false
   help: Initialize git repo?
 
-_exclude:
-  - hooks/
-  - ruff.toml
-  - .pre-commit-config.yaml
-  - .gitignore
-  - .git/
-  - copier.yml
+_subdirectory: "{{ dir_name }}"
 
 _tasks:
   - command: >

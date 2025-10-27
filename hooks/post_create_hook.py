@@ -113,11 +113,9 @@ def add_model_variants(models: str, directory_name: str, package_name: str):
 
         with fileinput.input(config_path, inplace=True) as f:
             for line in f:
-                # we replace the line that defines MODEL
-                # We accept either leading spaces then "MODEL", or "MODEL" at start
                 stripped = line.lstrip()
                 if stripped.startswith("MODEL"):
-                    indent = line[: len(line) - len(stripped)]
+                    indent = "    "
                     print(
                         indent
                         + MODEL_CONFIG_LINE_TEMPLATE.format(
@@ -158,7 +156,7 @@ def add_model_variants(models: str, directory_name: str, package_name: str):
         with cont_path.open() as f:
             for line in f:
                 if line.startswith("ARG MODEL"):
-                    new_lines.append(f"ARG MODEL={default_model}\n")
+                    new_lines.append(f'ARG MODEL="{default_model}"\n')
                 else:
                     new_lines.append(line)
         cont_path.write_text("".join(new_lines))
