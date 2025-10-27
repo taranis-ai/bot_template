@@ -7,13 +7,15 @@ A copier template for bots compatible with taranis-ai
 copier - https://copier.readthedocs.io/en/stable/#installation
 
 
-## Example: Create Bot project from template
+## Create Bot project from template
 
 This is a quick example of how to create your own bot from this template. Let's say, you want to create the new awesome bot, the **AwesomeBot**:
 
 First, create a project from the template:
 
     copier copy --trust https://github.com/taranis-ai/bot_template AwesomeBot
+
+> **Note:** copier will use the latest tag of this repository by default. You can specify a different ref with the `--vcs-ref` option
 
 You will be prompted a few questions:
 
@@ -63,7 +65,19 @@ The only other file that needs to be changed is `config.py`
 Here, you need to set the `PAYLOAD_KEY` config to what you want your JSON data to have as a key, e.g. "text".
 
 
-## Build and run
+## Update Bot project after template has changed
+
+A cool feature of copier is to update projects created from templates when the template evolves.
+For example, if you add a new file to the template, commit it and create a new tag, then you can switch to your created bot repo and run
+
+    copier update --trust -A
+
+copier will fetch the newest changes and you can then easily update your bot repo.
+
+> **Note:** again, copier will use the latest tag for updating. Make sure to update it or run with `--vcs-ref` option
+
+
+## Build and run your bot
 
 You can run the Bot locally or build a container image from it.
 More information can be found in the README.md of your created bot project.
