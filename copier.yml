@@ -1,15 +1,10 @@
 _min_copier_version: "9.0"
-# instructs copier to copy and render every file
+# instructs copier to copy and render every file type
 _templates_suffix: ""
 
 project_name:
   type: str
   help: Project Name
-
-dir_name:
-  default: "{{ project_name.replace(' ', '-') | lower }}"
-  when: false
-  type: str
 
 package_name:
   default: "{{ project_name.lower().replace(' ', '_').replace('-', '_') | lower }}"
@@ -43,16 +38,13 @@ init_git_repo:
   default: false
   help: Initialize git repo?
 
-_subdirectory: "{{ dir_name }}"
+_subdirectory: template
 
 _tasks:
   - command: >
-      cd "{{ _copier_conf.dst_path }}/{{ dir_name }}" &&
       git init -b main
     when: "{{ init_git_repo }}"
-
   - command: >
-      cd "{{ _copier_conf.dst_path }}/{{ dir_name }}" &&
       git remote add origin
       "{{ repo_url | replace('http://','git@')
                    | replace('https://','git@')
@@ -61,8 +53,7 @@ _tasks:
   - command:
       - "{{ _copier_python }}"
       - "{{ pathjoin(_copier_conf.src_path, 'hooks', 'post_create_hook.py', mode='native') }}"
-      - "{{ dir_name }}"
+      - "{{ package_name }}"
       - "{{ models }}"
       - "{{ repo_url }}"
-      - "{{ init_git_repo }}"
     when: "{{ _copier_operation == 'copy' }}"

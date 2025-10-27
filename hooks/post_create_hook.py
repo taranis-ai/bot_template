@@ -46,7 +46,7 @@ def git_remote_from_repo_url(repo_url: str) -> str:
     )
     return f"{transformed}.git"
 
-def add_model_variants(models: str, directory_name: str, package_name: str):
+def add_model_variants(models: str, package_name: str):
     """
     - create <model>.py for each model
     - generate/append pytest fixtures/tests
@@ -59,8 +59,7 @@ def add_model_variants(models: str, directory_name: str, package_name: str):
         print("No models provided, skipping model variant setup.")
         return
 
-    directory_path = Path(directory_name)
-    package_path = directory_path / package_name
+    package_path = Path(package_name)
 
     # 1. Create one .py file per model
     for model in models:
@@ -75,7 +74,7 @@ def add_model_variants(models: str, directory_name: str, package_name: str):
         )
 
     # 2. tests/conftest.py and tests/test_function.py
-    tests_dir = directory_path / "tests"
+    tests_dir = Path("tests")
     tests_dir.mkdir(exist_ok=True)
     conftest_path = tests_dir / "conftest.py"
     test_file_path = tests_dir / "test_function.py"
@@ -115,13 +114,11 @@ def add_model_variants(models: str, directory_name: str, package_name: str):
             for line in f:
                 stripped = line.lstrip()
                 if stripped.startswith("MODEL"):
-                    indent = "    "
                     print(
-                        indent
-                        + MODEL_CONFIG_LINE_TEMPLATE.format(
-                            model_list=model_list_literal,
-                            default_model=default_model,
-                        )
+                        MODEL_CONFIG_LINE_TEMPLATE.format(
+                        model_list=model_list_literal,
+                        default_model=default_model,
+                      )
                     )
                 else:
                     print(line, end="")
@@ -129,7 +126,7 @@ def add_model_variants(models: str, directory_name: str, package_name: str):
         print(f"WARNING: {config_path} not found; skipping MODEL patch")
 
     # 4. Patch build_container.sh MODEL default
-    bc_path = directory_path / "build_container.sh"
+    bc_path = Path("build_container.sh")
     if bc_path.exists():
         default_model = models[0]
         new_lines = []
@@ -149,7 +146,7 @@ def add_model_variants(models: str, directory_name: str, package_name: str):
         print("WARNING: build_container.sh not found; skipping build script patch")
 
     # 5. Patch Containerfile ARG MODEL
-    cont_path = directory_path / "Containerfile"
+    cont_path = Path("Containerfile")
     if cont_path.exists():
         default_model = models[0]
         new_lines = []
@@ -164,7 +161,7 @@ def add_model_variants(models: str, directory_name: str, package_name: str):
         print("WARNING: Containerfile not found; skipping Containerfile patch")
 
     # 6. Patch GitHub workflow placeholders
-    wf_path = directory_path / ".github/workflows/build_and_merge.yml"
+    wf_path = Path(".github/workflows/build_and_merge.yml")
     if wf_path.exists():
         default_model = models[0]
         text = wf_path.read_text()
@@ -177,28 +174,25 @@ def add_model_variants(models: str, directory_name: str, package_name: str):
 
 def main() -> int:
     # Arguments passed from copier.yml _tasks:
-    #   argv[1] = directory_name
+    #   argv[1] = package_name
     #   argv[2] = models
     #   argv[3] = repo_url
-    if len(sys.argv) < 4:
+    if len(sys.argv) != 4:
         print(
-            "Usage: post_create_hook.py <directory_name> <models> <repo_url>"
+            "Usage: post_create_hook.py <package_name> <models> <repo_url>"
         )
         return 1
 
-    directory_name = sys.argv[1]
+    package_name = sys.argv[1]
     models = sys.argv[2].replace("(model_a) ", "")
     repo_url = sys.argv[3]
 
-    package_name = directory_name.lower().replace(" ", "_").replace("-", "_")
-
     print("[post_create_hook] running with:")
-    print(f"  project_name={directory_name}")
     print(f"  package_name={package_name}")
     print(f"  models={models}")
     print(f"  repo_url={repo_url}")
 
-    add_model_variants(models, directory_name, package_name)
+    add_model_variants(models, package_name)
 
     print("[post_create_hook] done.")
     return 0
