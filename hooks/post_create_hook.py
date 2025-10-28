@@ -93,7 +93,7 @@ def add_model_variants(models: str, package_name: str):
             f"    yield {cls}()\n\n"
         )
         tests_block.append(
-            f"def test_cybersec_classification_{model}({model}: {cls}):\n"
+            f"def test_{model}({model}: {cls}):\n"
             f'    assert False, "Add a functional test for your {cls} model"\n'
         )
 
