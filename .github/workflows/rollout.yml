@@ -1,0 +1,91 @@
+name: Roll out template updates
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  rollout:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    env:
+      ORG: taranis-ai
+      BASE_BRANCH: main
+
+    steps:
+      - name: Checkout template repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set git identity to triggering user
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Install copier
+        run: |
+          sudo apt update
+          sudo apt install pipx
+          pipx ensurepath
+          pipx -m pip install copier
+
+      - name: Prepare repo list
+        id: repos
+        run: |
+          grep -v '^\s*$' repos.txt | grep -v '^\s*#' > repos_clean.txt
+          echo "Will update these repos:"
+          cat repos_clean.txt
+
+      - name: Roll out template changes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          RUN_ID="${GITHUB_RUN_ID}"
+
+          while read -r REPO; do
+            [ -z "$REPO" ] && continue
+            echo "=== Updating $REPO ==="
+
+            # clone target repo using the workflow token
+            git clone --branch "$BASE_BRANCH" "https://x-access-token:${GH_TOKEN}@github.com/${ORG}/${REPO}.git" "$REPO"
+            cd "$REPO"
+
+            PR_BRANCH="template-rollout/update-${RUN_ID}"
+            git checkout -b "$PR_BRANCH"
+
+            # apply template updates with copier
+            copier update --trust --skip-answered
+
+            # stage and see if there are changes
+            git add -A
+            if git diff --cached --quiet; then
+              echo "No changes in $REPO, skipping PR."
+              cd ..
+              rm -rf "$REPO"
+              continue
+            fi
+
+            # commit and push branch
+            git commit -m "sync with template"
+            git push --set-upstream origin "$PR_BRANCH"
+
+            # create PR as the triggering user
+            gh auth login --with-token <<< "${GH_TOKEN}"
+            gh pr create \
+              --base "$BASE_BRANCH" \
+              --head "$PR_BRANCH" \
+              --title "chore: sync with template" \
+              --body "Automated template sync triggered by @${{ github.actor }} (run ${RUN_ID})."
+
+            cd ..
+            rm -rf "$REPO"
+          done < repos_clean.txt
