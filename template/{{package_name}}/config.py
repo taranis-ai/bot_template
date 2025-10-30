@@ -6,7 +6,7 @@ class Settings(CommonSettings):
     MODEL: Literal[""]
     PACKAGE_NAME: str = "{{package_name}}"
     HF_MODEL_INFO: bool = True
-    PAYLOAD_KEY: str = "key"
+    PAYLOAD_SCHEMA: dict[str, dict] = {"key": {"type": "str", "required": True}}
 
 
 Config = Settings()
