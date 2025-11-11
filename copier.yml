@@ -49,11 +49,11 @@ _tasks:
       "{{ repo_url | replace('http://','git@')
                    | replace('https://','git@')
                    | replace('github.com/','github.com:') }}.git"
-    #when: "{{ init_git_repo and _copier_operation == 'copy' }}"
+    when: "{{ init_git_repo and _copier_operation == 'copy' }}"
   - command:
       - "{{ _copier_python }}"
       - "{{ pathjoin(_copier_conf.src_path, 'hooks', 'post_create_hook.py', mode='native') }}"
       - "{{ package_name }}"
       - "{{ models }}"
       - "{{ repo_url }}"
-    #when: "{{ _copier_operation == 'copy' }}"
+    when: "{{ _copier_operation == 'copy' }}"
