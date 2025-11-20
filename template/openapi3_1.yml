@@ -4,7 +4,8 @@ info:
   description: |
     <bot function description>
 
-    {% set model_list = models | split(',') | map('trim') | list %}
+    {% set model_list = models.split(',') %}
+    {% set model_list = model_list | map('trim') | list %}
 
     This API supports {{ model_list | length }} different models:
     {% for model in model_list %}
