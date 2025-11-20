@@ -57,3 +57,6 @@ _tasks:
       - "{{ models }}"
       - "{{ repo_url }}"
     when: "{{ _copier_operation == 'copy' }}"
+
+_exclude:
+  - "{% if _copier_operation == 'update' -%}template/openapi3_1.yml{% endif %}"
