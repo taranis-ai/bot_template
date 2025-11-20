@@ -4,8 +4,12 @@ info:
   description: |
     <bot function description>
 
-    This API supports {{ models | length }} different models:
-    {{ models.split(',') | map('trim') | join(', ') }}
+    {% set model_list = models | split(',') | map('trim') | list %}
+
+    This API supports {{ model_list | length }} different models:
+    {% for model in model_list %}
+      - {{ model }}: <add description>
+    {% endfor %}
 
     The model used is determined by the MODEL environment variable at deployment time.
   version: 0.0.0
