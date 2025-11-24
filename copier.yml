@@ -11,11 +11,6 @@ package_name:
   when: false
   type: str
 
-image_name:
-  default: "taranis-{{ project_name.lower().replace(' ', '-').replace('_', '-') }}"
-  when: false
-  type: str
-
 models:
   type: str
   help: Different models used in your project (comma-separated list, e.g. model_a, model_b)
@@ -30,26 +25,12 @@ description:
 
 repo_url:
   type: str
-  default: ""
   help: Github URL
 
-init_git_repo:
-  type: bool
-  default: false
-  help: Initialize git repo?
 
 _subdirectory: template
 
 _tasks:
-  - command: >
-      git init -b main
-    when: "{{ init_git_repo and _copier_operation == 'copy'}}"
-  - command: >
-      git remote add origin
-      "{{ repo_url | replace('http://','git@')
-                   | replace('https://','git@')
-                   | replace('github.com/','github.com:') }}.git"
-    when: "{{ init_git_repo and _copier_operation == 'copy' }}"
   - command:
       - "{{ _copier_python }}"
       - "{{ pathjoin(_copier_conf.src_path, 'hooks', 'post_create_hook.py', mode='native') }}"
