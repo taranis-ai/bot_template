@@ -59,10 +59,10 @@ jobs:
           echo "PR_BRANCH=template-rollout/update-${GITHUB_RUN_ID}" >> $GITHUB_ENV
 
       - name: Clone repository
-        run: |
-          git clone --branch "$BASE_BRANCH" \
-            "https://x-access-token:${{ github.token }}@github.com/${ORG}/${REPO_NAME}.git" \
-            "$REPO_NAME"
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ env.ORG }}/${{ env.REPO_NAME }}
+          ref: ${{ env.BASE_BRANCH }}
 
       - name: Create rollout branch
         run: |
