@@ -85,6 +85,11 @@ jobs:
             echo "changed=true" >> $GITHUB_OUTPUT
           fi
 
+      - name: Prepare authenticated remote for push
+        run: |
+          cd "$REPO_NAME"
+          git remote set-url origin "https://x-access-token:${{ github.token }}@github.com/${ORG}/${REPO_NAME}.git"
+
       - name: Commit and push changes
         if: steps.check.outputs.changed == 'true'
         run: |
