@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout template repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Parse repos.json
         id: collect
@@ -47,10 +47,9 @@ jobs:
 
       - name: Install copier
         run: |
-          sudo apt update
-          sudo apt install -y pipx
-          pipx ensurepath
-          pipx install copier
+          python3 -m pip install --user --break-system-packages pipx==1.8.0
+          python3 -m pipx install --global copier
+          copier --help
 
       - name: Set variables
         run: |
@@ -63,21 +62,19 @@ jobs:
         with:
           repository: ${{ env.ORG }}/${{ env.REPO_NAME }}
           ref: ${{ env.BASE_BRANCH }}
+          token: ${{ secrets.ORG_ADMIN_TOKEN }}
 
       - name: Create rollout branch
         run: |
-          cd "$REPO_NAME"
           git checkout -b "$PR_BRANCH"
 
       - name: Apply template changes
         run: |
-          cd "$REPO_NAME"
           copier update --trust --skip-answered
 
       - name: Check if changes exist
         id: check
         run: |
-          cd "$REPO_NAME"
           git add -A
           if git diff --cached --quiet; then
             echo "changed=false" >> $GITHUB_OUTPUT
@@ -85,15 +82,9 @@ jobs:
             echo "changed=true" >> $GITHUB_OUTPUT
           fi
 
-      - name: Prepare authenticated remote for push
-        run: |
-          cd "$REPO_NAME"
-          git remote set-url origin "https://x-access-token:${{ github.token }}@github.com/${ORG}/${REPO_NAME}.git"
-
       - name: Commit and push changes
         if: steps.check.outputs.changed == 'true'
         run: |
-          cd "$REPO_NAME"
           git commit -m "chore: sync with template"
           git push --set-upstream origin "$PR_BRANCH"
 
@@ -102,7 +93,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          cd "$REPO_NAME"
           gh auth login --with-token <<< "${GH_TOKEN}"
           gh pr create \
             --base "$BASE_BRANCH" \
@@ -110,6 +100,3 @@ jobs:
             --title "chore: sync with template" \
             --body "Automated template sync triggered by @${{ github.actor }} (run ${GITHUB_RUN_ID})."
 
-      - name: Cleanup
-        run: |
-          rm -rf "$REPO_NAME"
