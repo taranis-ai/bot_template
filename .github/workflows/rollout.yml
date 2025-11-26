@@ -90,7 +90,7 @@ jobs:
 
       # gh is installed on github runners; for testing workflow locally or on non-github runners, install
       - name: Install gh CLI
-        if: ${{ env.GITHUB_ACTIONS != 'true' }} && steps.check.outputs.changed == 'true'
+        if: env.GITHUB_ACTIONS != 'true' && steps.check.outputs.changed == 'true'
         run: |
           (type -p wget >/dev/null || (sudo apt update && sudo apt install wget -y))
              sudo mkdir -p -m 755 /etc/apt/keyrings
@@ -105,7 +105,7 @@ jobs:
       - name: Create PR
         if: steps.check.outputs.changed == 'true'
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
         run: |
           gh pr create \
             --base "$BASE_BRANCH" \
