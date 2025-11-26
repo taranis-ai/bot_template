@@ -88,9 +88,9 @@ jobs:
           git commit -m "sync with bot_template"
           git push --set-upstream origin "$PR_BRANCH"
 
-      # gh is installed on github runners; for testing workflow locally or on non-github runners, install
+       # gh is installed on github runners; for testing workflow locally or on non-github runners, install
       - name: Install gh CLI
-        if: env.GITHUB_ACTIONS != 'true' && steps.check.outputs.changed == 'true'
+        if: ${{ runner.name != 'Github Actions' && steps.check.outputs.changed == 'true' }}
         run: |
           (type -p wget >/dev/null || (sudo apt update && sudo apt install wget -y))
              sudo mkdir -p -m 755 /etc/apt/keyrings
