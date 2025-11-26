@@ -90,7 +90,7 @@ jobs:
 
       # gh is installed on github runners; for testing workflow locally or on non-github runners, install
       - name: Install gh CLI
-        if: ${{ env.GITHUB_ACTIONS == 'true' }} && steps.check.outputs.changed == 'true'
+        if: ${{ env.GITHUB_ACTIONS != 'true' }} && steps.check.outputs.changed == 'true'
         run: |
           (type -p wget >/dev/null || (sudo apt update && sudo apt install wget -y))
              sudo mkdir -p -m 755 /etc/apt/keyrings
@@ -107,9 +107,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh pr create
-            --base "$BASE_BRANCH"
-            --head "$PR_BRANCH"
-            --title "Sync with bot_template"
-            --body "Automated bot_template sync triggered by @${{ github.actor }} (run ${GITHUB_RUN_ID})."
+          gh pr create \
+            --base "$BASE_BRANCH" \
+            --head "$PR_BRANCH" \
+            --title "Sync with bot_template" \
+            --body "Automated bot_template sync triggered by @${{ github.actor }} (run ${GITHUB_RUN_ID})." \
             --fill
