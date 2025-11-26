@@ -19,6 +19,9 @@ jobs:
       - name: Get tag name
         run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
+      - name: Normalize tag
+        run: echo "TAG_SAFE=${TAG//./_}" >> $GITHUB_ENV
+
       - name: Get Tag Message
         run: |
           git fetch --depth=1 origin +refs/tags/*:refs/tags/*
@@ -33,7 +36,7 @@ jobs:
 
       - name: Generate SBOM
         run: |
-          uv export --format cyclonedx1.5 > ${{ runner.temp }}/sbom.json
+          uv export --format cyclonedx1.5 > ${{ runner.temp }}/sbom_${{ env.TAG_SAFE }}.json
           echo "Generated SBOM:"
 
       - name: Set up Docker Buildx
@@ -62,4 +65,4 @@ jobs:
           append_body: true
           body_path: ${{ runner.temp }}/release_body.md
           files: |
-            ${{ runner.temp }}/sbom.json
+            ${{ runner.temp }}/sbom_${{ env.TAG_SAFE }}.json
