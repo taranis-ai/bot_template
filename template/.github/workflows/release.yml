@@ -26,6 +26,16 @@ jobs:
           git tag -l --format='%(contents)' ${{ env.TAG }} >> $GITHUB_STEP_SUMMARY
           git tag -l --format='%(contents)' ${{ env.TAG }} >> ${{ runner.temp }}/release_body.md
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      - name: Generate SBOM
+        run: |
+          uv export --format cyclonedx1.5 > ${{ runner.temp }}/sbom.json
+          echo "Generated SBOM:"
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -39,16 +49,11 @@ jobs:
       - name: Retag Images
         env:
           TAG: ${{ env.TAG }}
-          IMAGE: ${{ github.rep}}
         run: |
             docker pull ghcr.io/taranis-ai/taranis-${{ github.event.repository.name }}:latest
-            docker buildx imagetools create --tag ghcr.io/taranis-ai/taranis-${{ github.event.repository.name }}:${TAG} --tag ghcr.io/taranis-ai/taranis-${{ github.event.repository.name }}:stable
-
-      - name: Download latest SBOM artifact
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # INSERT COMMAND
+            docker buildx imagetools create \
+              --tag ghcr.io/taranis-ai/taranis-${{ github.event.repository.name }}:${TAG} \
+              --tag ghcr.io/taranis-ai/taranis-${{ github.event.repository.name }}:stable
 
       - name: Release
         uses: softprops/action-gh-release@v2.0.6
