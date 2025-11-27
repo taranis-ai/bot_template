@@ -61,7 +61,7 @@ def add_model_variants(models: str, package_name: str):
 
     package_path = Path(package_name)
 
-    # 1. Create one .py file per model
+    # create one .py file per model
     for model in models:
         model_class = to_class_name(model)
 
@@ -73,7 +73,7 @@ def add_model_variants(models: str, package_name: str):
             )
         )
 
-    # 2. tests/conftest.py and tests/test_function.py
+    # insert tests/conftest.py and tests/test_function.py
     tests_dir = Path("tests")
     tests_dir.mkdir(exist_ok=True)
     conftest_path = tests_dir / "conftest.py"
@@ -104,7 +104,7 @@ def add_model_variants(models: str, package_name: str):
         "".join(imports_block) + "\n" + "\n".join(tests_block) + "\n"
     )
 
-    # 3. Patch config.py MODEL line
+    # add MODEL config to config.py
     config_path = package_path / "config.py"
     if config_path.exists():
         model_list_literal = "[" + ", ".join(f'"{m}"' for m in models) + "]"
@@ -125,7 +125,7 @@ def add_model_variants(models: str, package_name: str):
     else:
         print(f"WARNING: {config_path} not found; skipping MODEL patch")
 
-    # 4. Patch build_container.sh MODEL default
+    # set <default_model> in build_container.sh
     bc_path = Path("build_container.sh")
     if bc_path.exists():
         default_model = models[0]
@@ -145,7 +145,7 @@ def add_model_variants(models: str, package_name: str):
     else:
         print("WARNING: build_container.sh not found; skipping build script patch")
 
-    # 5. Patch Containerfile ARG MODEL
+    # set ARG MODEL to default model in Containerfile
     cont_path = Path("Containerfile")
     if cont_path.exists():
         default_model = models[0]
@@ -160,7 +160,7 @@ def add_model_variants(models: str, package_name: str):
     else:
         print("WARNING: Containerfile not found; skipping Containerfile patch")
 
-    # 6. Patch GitHub workflow placeholders
+    # set <models> and <default_model> in build_and_merge.yml
     wf_path = Path(".github/workflows/build_and_merge.yml")
     if wf_path.exists():
         default_model = models[0]
@@ -171,6 +171,15 @@ def add_model_variants(models: str, package_name: str):
     else:
         print("WARNING: .github/workflows/build_and_merge.yml not found; skipping workflow patch")
 
+    # set <default_model> in README.md
+    wf_path = Path("README.md")
+    if wf_path.exists():
+        default_model = models[0]
+        text = wf_path.read_text()
+        text = text.replace("<default_model>", default_model)
+        wf_path.write_text(text)
+    else:
+        print("WARNING: README.md not found; skipping workflow patch")
 
 def main() -> int:
     # Arguments passed from copier.yml _tasks:
