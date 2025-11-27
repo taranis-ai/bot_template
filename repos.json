@@ -1,3 +1,7 @@
 {
-  "story-clustering": "master"
+  "story-clustering": "master",
+  "cybersec-classifier": "main",
+  "natural-language-processing": "master",
+  "sentiment-analysis": "master",
+  "summarize_bot": "master"
 }
