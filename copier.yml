@@ -40,4 +40,4 @@ _tasks:
     when: "{{ _copier_operation == 'copy' }}"
 
 _exclude:
-  - "{% if _copier_operation == 'update' -%}template/openapi3_1.yml{% endif %}"
+  - "{% if _copier_operation == 'update' -%}openapi3_1.yml{% endif %}"
