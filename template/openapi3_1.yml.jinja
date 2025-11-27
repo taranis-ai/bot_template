@@ -121,13 +121,27 @@ paths:
               schema:
                 $ref: '#/components/schemas/ModelInfo'
               example:
-                # proivide example model info
+                # provide example model info
                 model_name: "model"
                 model_version: "0.0.0"
 
 components:
   schemas:
-  # add component schemas
+  # add all component schemas
+
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Error message describing what went wrong
+          example: "Missing required field: text"
+        details:
+          type: string
+          description: Additional error details (optional)
+          example: "The 'text' field is required and cannot be empty"
 
 tags:
   - name: System
