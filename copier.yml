@@ -1,6 +1,6 @@
 _min_copier_version: "9.0"
 # instructs copier to copy and render every file type
-_templates_suffix: ""
+_templates_suffix: .jinja
 
 project_name:
   type: str
