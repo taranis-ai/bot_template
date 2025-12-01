@@ -181,6 +181,16 @@ def add_model_variants(models: str, package_name: str):
     else:
         print("WARNING: README.md not found; skipping workflow patch")
 
+    # set <default_model> in docker/compose.yml
+    wf_path = Path("docker/compose.yml")
+    if wf_path.exists():
+        default_model = models[0]
+        text = wf_path.read_text()
+        text = text.replace("<default_model>", default_model)
+        wf_path.write_text(text)
+    else:
+        print("WARNING: docker/compose.yml not found; skipping workflow patch")
+
 def main() -> int:
     # Arguments passed from copier.yml _tasks:
     #   argv[1] = package_name

@@ -1,0 +1,11 @@
+services:
+  {{ package_name }}:
+    image: ghcr.io/taranis-ai/{{ repo_name }}:latest
+    environment:
+      DEBUG: "${DEBUG:-False}"
+      MODEL: "${MODEL:-<default_model>}"
+      API_KEY: "${API_KEY:-testkey}"
+      # add additional env vars
+    ports:
+      - "5500:8000"
+    restart: unless-stopped

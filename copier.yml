@@ -27,6 +27,10 @@ repo_url:
   type: str
   help: Github URL
 
+repo_name:
+  default: "{{ repo_url.split('/')[-1].replace('.git', '') }}"
+  when: false
+  type: str
 
 _subdirectory: template
 
