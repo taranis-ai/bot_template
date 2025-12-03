@@ -1,6 +1,6 @@
 services:
   {{ package_name }}:
-    image: ghcr.io/taranis-ai/{{ repo_name }}:latest
+    image: ghcr.io/taranis-ai/taranis-{{ repo_name }}:latest
     environment:
       DEBUG: "${DEBUG:-False}"
       MODEL: "${MODEL:-<default_model>}"
